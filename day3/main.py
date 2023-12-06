@@ -1,18 +1,25 @@
 
 
-def check_for_digit(positions, line:str):
-    for position in positions:
-        if position != 0 and position != len(line):
-            if line[position].isdigit():
-                return line[position]
+def search_adjacent(t_index, c_index):
+
+    return True
 
 
 
 with open("input.txt") as data_file:
     data = data_file.readlines()
-for line_index in range(0, len(data)):
-    text_line = data[line_index]
-    for char_index in range(0, len(text_line)):
-        if not text_line[char_index].isdigit() and text_line[char_index] != ".":
-            places_to_check = [char_index-1, char_index, char_index+1]
+result = 0
+number = ""
+for text_index in range(0, len(data)):
+    text = data[text_index].strip()
+    for character_index in range(0, len(text)):
+        character = text[character_index]
+        if character.isdigit():
+            search_adjacent(text_index, character_index)
+            number += character
+        else:
+            if number != "":
+                if search_adjacent(text_index, character_index):
+                    result += int(number)
+            number = ""
 
