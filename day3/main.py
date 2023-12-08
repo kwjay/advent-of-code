@@ -10,22 +10,21 @@ def search_adjacent(t_index, c_index):
     if t_index == 0:
         starting_row = t_index
     elif t_index == len(data) - 1:
-        ending_row = t_index - 1
+        ending_row = t_index
     if c_index == 0:
         starting_column = c_index
     elif c_index == len(text) - 1:
         ending_column = c_index
-
     found_any_symbol = False
     for row in range(starting_row, ending_row + 1):
         for column in range(starting_column, ending_column + 1):
             if not data[row][column].isdigit() and data[row][column] != ".":
-                symbol_positions.append([row, column])
                 if data[row][column] == "*":
+                    symbol_positions.append([row, column])
                     if row not in gears:
                         gears[row] = {}
                     if column not in gears[row]:
-                        gears[row] = {column: [1, 1]}
+                        gears[row][column] = [1, 1]
                     else:
                         gears[row][column][0] += 1
                 found_any_symbol = True
@@ -53,11 +52,11 @@ for text_index in range(0, len(data)):
                     first_part_result += int(number)
                     for symbol_position in symbol_positions:
                         if data[symbol_position[0]][symbol_position[1]] == "*":
-                            print(symbol_position)
-                            # gears[symbol_position[0]][symbol_position[1]][1] *= int(number)
+                            gears[symbol_position[0]][symbol_position[1]][1] *= int(number)
+                    symbol_positions = []
                 near_symbol = False
                 number = ""
-    symbol_position = []
+    symbol_positions = []
 for gear_x, gear_y in gears.items():
     for gear_values in gear_y.values():
         if gear_values[0] == 2:
