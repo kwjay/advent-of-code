@@ -21,22 +21,31 @@ with open("input.txt") as data_file:
         key = text_line.split(":")[0].replace(" map", "")
         temp_values = text_line.split(":")[1].strip().split("\n")
         values = []
+        test = []
         if key != "seeds":
             for value_index in range(0, len(temp_values)):
                 values.append(temp_values[value_index].split(" "))
         else:
-            values = temp_values[0].split(" ")
+            seed_numbers = temp_values[0].split(" ")
+            seed_range = []
+            for seed_index in range(0, len(seed_numbers)):
+                seed_range.append(seed_numbers[seed_index])
+                if seed_index % 2 != 0:
+                    values.append(seed_range)
+                    seed_range = []
         almanac[key] = values
-first_part_result = -1
-for seed in almanac["seeds"]:
-    soil = mapping("seed-to-soil", int(seed))
-    fertilizer = mapping("soil-to-fertilizer", soil)
-    water = mapping("fertilizer-to-water", fertilizer)
-    light = mapping("water-to-light", water)
-    temperature = mapping("light-to-temperature", light)
-    humidity = mapping("temperature-to-humidity", temperature)
-    location = mapping("humidity-to-location", humidity)
-    if first_part_result > location or first_part_result == -1:
-        first_part_result = location
-print(first_part_result)
+result = -1
+for seeds in almanac["seeds"]:
+    for seed in range(int(seeds[0]), int(seeds[0]) + int(seeds[1])):
+        print(seed)
+        soil = mapping("seed-to-soil", int(seed))
+        fertilizer = mapping("soil-to-fertilizer", soil)
+        water = mapping("fertilizer-to-water", fertilizer)
+        light = mapping("water-to-light", water)
+        temperature = mapping("light-to-temperature", light)
+        humidity = mapping("temperature-to-humidity", temperature)
+        location = mapping("humidity-to-location", humidity)
+        if result > location or result == -1:
+            result = location
+print(result)
 
