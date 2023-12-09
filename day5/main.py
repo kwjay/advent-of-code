@@ -8,7 +8,6 @@ def mapping(formatting: str, seed_number: int):
         source_range_end = source_range_start + range_length
         destination_range_end = destination_range_start + range_length
         if source_range_start <= seed_number < source_range_end:
-            # print(seed_number)
             format_number = destination_range_end - (source_range_end - 1 - seed_number) - 1
             break
         else:
@@ -30,7 +29,6 @@ with open("input.txt") as data_file:
         almanac[key] = values
 first_part_result = -1
 for seed in almanac["seeds"]:
-    # print(seed)
     soil = mapping("seed-to-soil", int(seed))
     fertilizer = mapping("soil-to-fertilizer", soil)
     water = mapping("fertilizer-to-water", fertilizer)
