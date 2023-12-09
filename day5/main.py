@@ -35,6 +35,7 @@ with open("input.txt") as data_file:
                     seed_range = []
         almanac[key] = values
 result = -1
+found_location = False
 for seeds in almanac["seeds"]:
     for seed in range(int(seeds[0]), int(seeds[0]) + int(seeds[1])):
         print(seed)
