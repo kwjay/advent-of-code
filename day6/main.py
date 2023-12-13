@@ -13,7 +13,19 @@ def get_data():
         return data_file.readlines()
 
 
+def race_strategy(time, distance):
+    ways_to_win = 0
+    for hold_time in range(0, time):
+        distance_travelled = (time - hold_time) * hold_time
+        if distance_travelled > distance:
+            ways_to_win += 1
+    return ways_to_win
+
+
 races = {}
 formatting_data(get_data())
-print(races)
+first_part_result = 1
+for race in range(0, len(races["Time"])):
+    first_part_result *= race_strategy(races["Time"][race], races["Distance"][race])
+print(first_part_result)
 
