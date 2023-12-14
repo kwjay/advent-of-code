@@ -42,18 +42,30 @@ def set_type():
     return card_typing
 
 
-def sorting_cards(hand):
-    sorting_key = ""
-    for character in hand:
-        sorting_key += str(type_of_cards.index(character))
-    print(sorting_key)
-    return sorting_key
+def resolve_same_values(first_hand, second_hand):
+    for i in first_hand:
+        if type_of_cards.index(first_hand[i]) < type_of_cards.index(second_hand[i]):
+            return
+
 
 
 def calc_ranking(grouped_types):
     global first_part_result
+    ranking = []
     for hand_type, hands in grouped_types.items():
-        print(hands.sort(key=sorting_cards))
+        in_type_ranking = []
+        for hand_index in range(0, len(hands)):
+            if not in_type_ranking:
+                in_type_ranking.append(hands[hand_index])
+            else:
+                for ranking_index in range(0, len(in_type_ranking)):
+                    if type_of_cards.index(hands[hand_index][0]) < type_of_cards.index(in_type_ranking[ranking_index][0]):
+                        in_type_ranking.insert(ranking_index, hands[hand_index])
+                        break
+                    elif type_of_cards.index(hands[hand_index][0]) == type_of_cards.index(in_type_ranking[ranking_index][0]):
+                        resolve_same_values()
+
+
 
 
 type_of_cards = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
