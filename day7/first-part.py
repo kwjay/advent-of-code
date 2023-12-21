@@ -13,59 +13,73 @@ def formatting_data(data_to_format):
 
 
 def set_type():
-    card_typing = {"five": [], "four": [], "full": [], "three": [], "two": [], "one": [], "high": []}
+    card_typing = {"five of a kind": [], "four of a kind": [], "full house": [], "three of a kind": [], "two pair": [],
+                   "one pair": [], "high card": []}
     for hand in camel_cards:
         for card in hand:
-            hand_count = hand.count(card)
-            if hand_count == 5:
-                card_typing["five"].append(hand)
+            card_count = hand.count(card)
+            if card_count == 5:
+                card_typing["five of a kind"].append(hand)
                 break
-            elif hand_count == 4:
-                card_typing["four"].append(hand)
+            elif card_count == 4:
+                card_typing["four of a kind"].append(hand)
                 break
-            elif hand_count == 3 or hand_count == 2:
+            elif card_count == 3:
                 hand_copy = hand
-                for _ in range(0, hand_count):
+                for yy in range(0, card_count):
                     hand_copy = hand_copy.replace(card, "")
-                if hand_copy.count(hand_copy[0]) == 3 or hand_copy.count(hand_copy[0]) == 2:
-                    card_typing["full"].append(hand)
-                elif hand_count == 3:
-                    card_typing["three"].append(hand)
-                elif (hand_copy.count(hand_copy[0]) == 2 or hand_copy.count(hand_copy[1]) == 2
-                      or hand_copy.count(hand_copy[2]) == 2):
-                    card_typing["two"].append(hand)
+                if hand_copy.count(hand_copy[0]) == 2:
+                    card_typing["full house"].append(hand)
                 else:
-                    card_typing["one"].append(hand)
+                    card_typing["three of a kind"].append(hand)
+                break
+            elif card_count == 2:
+                hand_copy = hand
+                for yy in range(0, card_count):
+                    hand_copy = hand_copy.replace(card, "")
+                if hand_copy.count(hand_copy[0]) == 2 or hand_copy.count(hand_copy[1]) == 2:
+                    card_typing["two pair"].append(hand)
+                else:
+                    card_typing["one pair"].append(hand)
                 break
             elif hand.index(card) == len(hand) - 1:
-                card_typing["high"].append(hand)
+                card_typing["high card"].append(hand)
+                break
     return card_typing
 
 
-def resolve_same_values(first_hand, second_hand):
-    for i in first_hand:
-        if type_of_cards.index(first_hand[i]) < type_of_cards.index(second_hand[i]):
-            return
+def merge_sort(array):
+    array_length = len(array)
+    if array_length > 1:
+        middle = array_length // 2
+        left = array[:middle]
+        right = array[middle:]
 
+        merge_sort(left)
+        merge_sort(right)
 
+        i = j = k = 0
 
-def calc_ranking(grouped_types):
-    global first_part_result
-    ranking = []
-    for hand_type, hands in grouped_types.items():
-        in_type_ranking = []
-        for hand_index in range(0, len(hands)):
-            if not in_type_ranking:
-                in_type_ranking.append(hands[hand_index])
-            else:
-                for ranking_index in range(0, len(in_type_ranking)):
-                    if type_of_cards.index(hands[hand_index][0]) < type_of_cards.index(in_type_ranking[ranking_index][0]):
-                        in_type_ranking.insert(ranking_index, hands[hand_index])
-                        break
-                    elif type_of_cards.index(hands[hand_index][0]) == type_of_cards.index(in_type_ranking[ranking_index][0]):
-                        resolve_same_values()
+        while i < len(left) and j < len(right):
+            for card_index in range(0, len(left[i])):
+                if type_of_cards.index(left[i][card_index]) < type_of_cards.index(right[j][card_index]):
+                    array[k] = left[i]
+                    i += 1
+                    break
+                elif type_of_cards.index(left[i][card_index]) > type_of_cards.index(right[j][card_index]):
+                    array[k] = right[j]
+                    j += 1
+                    break
+            k += 1
 
-
+        while i < len(left):
+            array[k] = left[i]
+            i += 1
+            k += 1
+        while j < len(right):
+            array[k] = right[j]
+            j += 1
+            k += 1
 
 
 type_of_cards = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
@@ -74,4 +88,16 @@ first_part_result = 0
 data = get_data()
 camel_cards = formatting_data(data)
 grouped_cards = set_type()
-calc_ranking(grouped_cards)
+ranking = []
+for hand_type in grouped_cards.values():
+    merge_sort(hand_type)
+    print(hand_type)
+    for x in hand_type:
+        ranking.append(x)
+ranking = ranking[::-1]
+print(ranking)
+for rank in range(0, len(ranking)):
+    temp = camel_cards[ranking[rank]] * (rank + 1)
+    first_part_result += temp
+
+print(first_part_result)
